@@ -6,4 +6,5 @@
     <string name="title_activity_kml">KMLActivity</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_politician_detail">PoliticianDetailActivity</string>
+    <string name="title_activity_politician_list">PoliticianListActivity</string>
 </resources>

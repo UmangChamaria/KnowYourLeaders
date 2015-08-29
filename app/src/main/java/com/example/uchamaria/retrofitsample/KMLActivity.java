@@ -1,8 +1,13 @@
 package com.example.uchamaria.retrofitsample;
 
-import android.os.AsyncTask;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -14,26 +19,47 @@ import com.google.maps.android.kml.KmlPolygon;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.Locale;
 
-public class KMLActivity extends BaseActivity {
+public class KMLActivity extends BaseActivity{
 
+    private static final String TAG = KMLActivity.class.getSimpleName();
     private GoogleMap mMap;
-    private KmlLayer kmlLayer;
+    private LatLng mPlaceLatLong;
+    private NetworkHandler mNetworkHandler;
+
+    private final int REQ_CODE_SPEECH_INPUT = 100;
 
     protected int getLayoutId() {
         return R.layout.activity_kml;
     }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        promptSpeechInput();
+        mNetworkHandler = new NetworkHandler();
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                Log.d(TAG, latLng.toString());
+                mNetworkHandler.getPoliticianByLatLong(latLng);
+            }
+        });
+    }
 
-    public void startDemo () {
+    public void startOverlay() {
         try {
             mMap = getMap();
+            mPlaceLatLong = new LatLng(28.62, 77.21);
+            CameraUpdate center = CameraUpdateFactory.newLatLng(mPlaceLatLong);
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(10);
+
+            mMap.moveCamera(center);
+            mMap.animateCamera(zoom);
             retrieveFileFromResource();
-//            retrieveFileFromUrl();
+
         } catch (Exception e) {
             Log.e("Exception caught", e.toString());
         }
@@ -48,12 +74,6 @@ public class KMLActivity extends BaseActivity {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
-    }
-
-    private void retrieveFileFromUrl() {
-        String url = "https://kml-samples.googlecode.com/svn/trunk/" +
-                "morekml/Polygons/Polygons.Google_Campus.kml";
-        new DownloadKmlFile(url).execute();
     }
 
     private void moveCameraToKml(KmlLayer kmlLayer) {
@@ -73,41 +93,36 @@ public class KMLActivity extends BaseActivity {
         getMap().moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 1));
     }
 
-    private class DownloadKmlFile extends AsyncTask<String, Void, byte[]> {
-        private final String mUrl;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        public DownloadKmlFile(String url) {
-            mUrl = url;
-        }
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
 
-        protected byte[] doInBackground(String... params) {
-            try {
-                InputStream is =  new URL(mUrl).openStream();
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                int nRead;
-                byte[] data = new byte[16384];
-                while ((nRead = is.read(data, 0, data.length)) != -1) {
-                    buffer.write(data, 0, nRead);
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    Log.d(TAG, result.get(0));
                 }
-                buffer.flush();
-                return buffer.toByteArray();
-            } catch (IOException e) {
-                e.printStackTrace();
+                break;
             }
-            return null;
-        }
 
-        protected void onPostExecute(byte[] byteArr) {
-            try {
-                kmlLayer = new KmlLayer(mMap, new ByteArrayInputStream(byteArr),
-                        getApplicationContext());
-                kmlLayer.addLayerToMap();
-                moveCameraToKml(kmlLayer);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }
+    }
+
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "speak");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),"no support",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }

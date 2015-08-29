@@ -47,6 +47,10 @@
             android:name=".PoliticianDetailActivity"
             android:label="@string/title_activity_politician_detail" >
         </activity>
+        <activity
+            android:name=".PoliticianListActivity"
+            android:label="@string/title_activity_politician_list" >
+        </activity>
     </application>
 
 </manifest>

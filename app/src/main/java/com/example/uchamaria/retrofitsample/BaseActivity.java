@@ -35,14 +35,14 @@ public abstract class BaseActivity extends FragmentActivity {
         }
         mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         if (mMap != null) {
-            startDemo();
+            startOverlay();
         }
     }
 
     /**
      * Run the demo-specific code.
      */
-    protected abstract void startDemo();
+    protected abstract void startOverlay();
 
     protected GoogleMap getMap() {
         setUpMapIfNeeded();
