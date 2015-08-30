@@ -32,6 +32,16 @@ public class PoliticianModel implements Serializable {
     private String  mPoliticianNumber;
     @SerializedName("emailId")
     private String mPoliticianEmailId;
+    @SerializedName("address")
+    private String mPoliticianAddress;
+
+    public String getPoliticianAddress() {
+        return mPoliticianAddress;
+    }
+
+    public void setPoliticianAddress(String mPoliticianAddress) {
+        this.mPoliticianAddress = mPoliticianAddress;
+    }
 
     public String getPoliticianId() {
         return mPoliticianId;

@@ -1,6 +1,12 @@
 package com.example.uchamaria.retrofitsample;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -15,10 +21,17 @@ import retrofit.client.Response;
 public class NetworkHandler {
 
     private final String TAG = NetworkHandler.class.getSimpleName();
+
+    public NetworkHandler(Context context, Activity activity) {
+        this.mContext = context;
+        mActivity = activity;
+    }
+    private Activity mActivity;
     private Context mContext;
     private RestAdapter mRestAdapter;
     private CivicApi mCivicApi;
     private PoliticianModel mPolitician;
+    private ProgressDialog mProgressDialog;
 
 
     public void init(){
@@ -29,21 +42,77 @@ public class NetworkHandler {
         mCivicApi = mRestAdapter.create(CivicApi.class);
     }
 
+    @Nullable
     public PoliticianModel getPoliticianByLatLong(LatLng latLng){
         init();
-        Callback callback = new Callback() {
+        final Callback callback = new Callback() {
             @Override
             public void success(Object o, Response response) {
-                mPolitician = (PoliticianModel)o;
+                hideProgressDialog();
+                if (response.getStatus() == 200) {
+                    mPolitician = (PoliticianModel) o;
+                    if (mPolitician != null) {
+                        Intent intent = new Intent(mContext, PoliticianDetailActivity.class);
+                        intent.putExtra("politicianDetails", mPolitician);
+                        mActivity.startActivity(intent);
+                    }
+                }
             }
 
             @Override
             public void failure(RetrofitError retrofitError) {
-
+                hideProgressDialog();
+                if (retrofitError.getResponse().getStatus() == 404){
+                    Toast.makeText(mContext, "Could not find constituency. Please try again",
+                            Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(mContext, "Something went wrong. Please try again", Toast
+                            .LENGTH_LONG).show();
+                }
+                Log.d(TAG, "retro-fit error");
+                Toast.makeText(mContext, "Something went wrong. Please try again", Toast
+                        .LENGTH_LONG).show();
             }
         };
         mCivicApi.getPoliticiansByLatLong(latLng.latitude, latLng.longitude, callback);
+        showProgressDialog();
+        return mPolitician;
+    }
 
+    @Nullable
+    public PoliticianModel getPoliticianByAreaName(String areaName) {
+        init();
+        final Callback callback = new Callback() {
+            @Override
+            public void success(Object o, Response response) {
+                hideProgressDialog();
+                if (response.getStatus() == 200) {
+                    mPolitician = (PoliticianModel) o;
+                    if (mPolitician != null) {
+                        Intent intent = new Intent(mContext, PoliticianDetailActivity.class);
+                        intent.putExtra("politicianDetails", mPolitician);
+                        mActivity.startActivity(intent);
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                hideProgressDialog();
+                if (retrofitError.getResponse().getStatus() == 404){
+                    Toast.makeText(mContext, "Could not find constituency. Please try again",
+                            Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(mContext, "Something went wrong. Please try again", Toast
+                            .LENGTH_LONG).show();
+                }
+                Log.d(TAG, "retro-fit error");
+                Toast.makeText(mContext, "Something went wrong. Please try again", Toast
+                        .LENGTH_LONG).show();
+            }
+        };
+        mCivicApi.getPoliticianByAreaName(areaName, callback);
+        showProgressDialog();
         return mPolitician;
     }
 
@@ -62,4 +131,17 @@ public class NetworkHandler {
         });
         return mPolitician;
     }*/
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    private void showProgressDialog() {
+        mProgressDialog = new ProgressDialog(mActivity);
+        mProgressDialog.setMessage("Searching for your constituency politician");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+    }
 }

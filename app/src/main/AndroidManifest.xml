@@ -25,7 +25,11 @@
         <activity
             android:name=".KMLActivity"
             android:label="@string/title_activity_kml" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <meta-data
@@ -41,12 +45,9 @@
         </activity>
         <activity
             android:name=".PoliticianDetailActivity"
-            android:label="@string/title_activity_politician_detail" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:label="@string/title_activity_politician_detail"
+            android:theme="@style/AppTheme">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

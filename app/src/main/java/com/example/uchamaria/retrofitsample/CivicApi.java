@@ -17,5 +17,8 @@ public interface CivicApi {
     void getPoliticiansByLatLong(@Query("lat") double latitude, @Query("long") double
             longitude, Callback<PoliticianModel> response);
 
+    @GET("/civic-core/politicians/geocode")
+    void getPoliticianByAreaName(@Query(value = "address", encodeValue = true) String areaName,
+                                 Callback<PoliticianModel> response);
 
 }
