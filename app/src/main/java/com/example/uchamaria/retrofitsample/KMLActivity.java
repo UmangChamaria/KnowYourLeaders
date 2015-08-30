@@ -1,5 +1,6 @@
 package com.example.uchamaria.retrofitsample;
 
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ public class KMLActivity extends BaseActivity{
     private GoogleMap mMap;
     private LatLng mPlaceLatLong;
     private NetworkHandler mNetworkHandler;
+    private ProgressDialog mProgressDialog;
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
@@ -44,9 +46,27 @@ public class KMLActivity extends BaseActivity{
             @Override
             public void onMapClick(LatLng latLng) {
                 Log.d(TAG, latLng.toString());
-                mNetworkHandler.getPoliticianByLatLong(latLng);
+                showProgressDialog();
+                PoliticianModel politician = mNetworkHandler.getPoliticianByLatLong(latLng);
+                hideProgressDialog();
+                Intent intent = new Intent(getApplicationContext(), PoliticianDetailActivity.class);
+                intent.putExtra("politicianDetails", politician);
+
             }
         });
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    private void showProgressDialog() {
+        mProgressDialog = new ProgressDialog(KMLActivity.this);
+        mProgressDialog.setMessage("Searching for your constituency politician");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
     }
 
     public void startOverlay() {

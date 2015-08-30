@@ -2,8 +2,13 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.example.uchamaria.retrofitsample.PoliticianDetailActivity">
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
+      <item android:id="@+id/action_call"
+            android:title="Call"
+            android:icon="@drawable/ic_phone_white_48dp"
+            app:showAsAction="always"/>
+      <item android:id="@+id/action_email"
+            android:title="Email"
+            android:icon="@drawable/ic_email_white_48dp"
+            android:orderInCategory="100"
+            app:showAsAction="always"/>
 </menu>

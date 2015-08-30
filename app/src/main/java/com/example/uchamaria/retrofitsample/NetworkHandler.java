@@ -1,10 +1,8 @@
 package com.example.uchamaria.retrofitsample;
 
-import android.util.Log;
+import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -17,9 +15,10 @@ import retrofit.client.Response;
 public class NetworkHandler {
 
     private final String TAG = NetworkHandler.class.getSimpleName();
-    RestAdapter mRestAdapter;
-    CivicApi mCivicApi;
-    List<PoliticianModel> mPoliticianList;
+    private Context mContext;
+    private RestAdapter mRestAdapter;
+    private CivicApi mCivicApi;
+    private PoliticianModel mPolitician;
 
 
     public void init(){
@@ -30,15 +29,12 @@ public class NetworkHandler {
         mCivicApi = mRestAdapter.create(CivicApi.class);
     }
 
-    public List<PoliticianModel> getPoliticianByLatLong(LatLng latLng){
+    public PoliticianModel getPoliticianByLatLong(LatLng latLng){
         init();
         Callback callback = new Callback() {
             @Override
             public void success(Object o, Response response) {
-                mPoliticianList = (List<PoliticianModel>)o;
-                for (PoliticianModel politicianModel : mPoliticianList){
-                    Log.d(TAG, politicianModel.getPoliticianName());
-                }
+                mPolitician = (PoliticianModel)o;
             }
 
             @Override
@@ -48,10 +44,10 @@ public class NetworkHandler {
         };
         mCivicApi.getPoliticiansByLatLong(latLng.latitude, latLng.longitude, callback);
 
-        return mPoliticianList;
+        return mPolitician;
     }
 
-    public List<PoliticianModel> getAllPoliticianList(){
+ /*   public List<PoliticianModel> getAllPoliticianList(){
         init();
         mCivicApi.getAllPoliticianInfo(new Callback<List<PoliticianModel>>() {
             @Override
@@ -64,6 +60,6 @@ public class NetworkHandler {
 
             }
         });
-        return mPoliticianList;
-    }
+        return mPolitician;
+    }*/
 }

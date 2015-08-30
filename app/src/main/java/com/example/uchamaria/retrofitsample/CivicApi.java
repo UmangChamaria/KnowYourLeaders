@@ -15,7 +15,7 @@ public interface CivicApi {
 
     @GET("/civic-core/politicians/latlong")
     void getPoliticiansByLatLong(@Query("lat") double latitude, @Query("long") double
-            longitude, Callback<List<PoliticianModel>> response);
+            longitude, Callback<PoliticianModel> response);
 
 
 }

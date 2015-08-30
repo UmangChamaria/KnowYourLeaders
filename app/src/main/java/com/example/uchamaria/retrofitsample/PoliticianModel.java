@@ -2,16 +2,18 @@ package com.example.uchamaria.retrofitsample;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * @author Umang Chamaria
  */
-public class PoliticianModel{
+public class PoliticianModel implements Serializable {
     @SerializedName("id")
     private String mPoliticianId;
     @SerializedName("name")
     private String mPoliticianName;
     @SerializedName("constituencyName")
-    private String mConstituencyName;
+    private String mPoliticianConstituencyName;
     @SerializedName("partyName")
     private String mPartyName;
     @SerializedName("education")
@@ -22,6 +24,14 @@ public class PoliticianModel{
     private String mPoliticianTotalAssets;
     @SerializedName("liabilities")
     private String mPoliticianLiabilities;
+    @SerializedName("area")
+    private String mPoliticianArea;
+    @SerializedName("criminalRecord")
+    private String mPoliticianCriminalRecord[];
+    @SerializedName("phoneNumber")
+    private String  mPoliticianNumber;
+    @SerializedName("emailId")
+    private String mPoliticianEmailId;
 
     public String getPoliticianId() {
         return mPoliticianId;
@@ -40,11 +50,11 @@ public class PoliticianModel{
     }
 
     public String getConstituencyName() {
-        return mConstituencyName;
+        return mPoliticianConstituencyName;
     }
 
     public void setConstituencyName(String mConstituencyName) {
-        this.mConstituencyName = mConstituencyName;
+        this.mPoliticianConstituencyName = mConstituencyName;
     }
 
     public String getPartyName() {
@@ -85,5 +95,38 @@ public class PoliticianModel{
 
     public void setPoliticianLiabilities(String mPoliticianLiabilities) {
         this.mPoliticianLiabilities = mPoliticianLiabilities;
+    }
+
+    public String getPoliticianArea() {
+        return mPoliticianArea;
+    }
+
+    public void setPoliticianArea(String mPoliticianArea) {
+        this.mPoliticianArea = mPoliticianArea;
+    }
+
+    public String[] getPoliticianCriminalRecord() {
+        return mPoliticianCriminalRecord;
+    }
+
+    public void setPoliticianCriminalRecord(String[] mPoliticianCriminalRecord) {
+        this.mPoliticianCriminalRecord = mPoliticianCriminalRecord;
+    }
+
+
+    public String getPoliticianEmailId() {
+        return mPoliticianEmailId;
+    }
+
+    public void setPoliticianEmailId(String mPoliticianEmailId) {
+        this.mPoliticianEmailId = mPoliticianEmailId;
+    }
+
+    public String getPoliticianNumber() {
+        return mPoliticianNumber;
+    }
+
+    public void setPoliticianNumber(String mPoliticianNumber) {
+        this.mPoliticianNumber = mPoliticianNumber;
     }
 }
