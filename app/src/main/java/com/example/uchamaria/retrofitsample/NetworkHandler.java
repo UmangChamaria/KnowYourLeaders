@@ -103,8 +103,8 @@ public class NetworkHandler {
                     Toast.makeText(mContext, "Could not find constituency. Please try again",
                             Toast.LENGTH_LONG).show();
                 }else {
-                    Toast.makeText(mContext, "Something went wrong. Please try again", Toast
-                            .LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Could not find constituency. Please try again",
+                            Toast.LENGTH_LONG).show();
                 }
                 Log.d(TAG, "retro-fit error");
                 Toast.makeText(mContext, "Something went wrong. Please try again", Toast

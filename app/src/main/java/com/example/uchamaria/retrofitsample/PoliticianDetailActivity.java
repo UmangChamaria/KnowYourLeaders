@@ -60,9 +60,6 @@ public class PoliticianDetailActivity extends AppCompatActivity {
 
         mPartyName.setText(mPoliticianModel.getPartyName());
         mEducationalQualification.setText(mPoliticianModel.getPoliticianEducation());
-//        mAddress.setText(mPoliticianModel.getPoliticianAddress());
-//        Currency.getInstance(Locale.getDefault());
-//        Currency.getInstance(Currency.getInstance(new Locale("hi", "IN")).getSymbol());
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
         Currency currency = Currency.getInstance(new Locale("en", "IN"));
         numberFormat.setCurrency(currency);
@@ -71,6 +68,8 @@ public class PoliticianDetailActivity extends AppCompatActivity {
         mLiabilities.setText(numberFormat.format(Integer.parseInt(mPoliticianModel
                 .getPoliticianLiabilities
                         ())));
+        mAddress.setText(mPoliticianModel.getPoliticianAddress());
+        processIPCString(mPoliticianModel.getPoliticianCriminalRecord());
     }
 
     @Override
@@ -92,7 +91,8 @@ public class PoliticianDetailActivity extends AppCompatActivity {
     private void handleOnClickEmail() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         if (!TextUtils.isEmpty(mPoliticianModel.getPoliticianEmailId())) {
-            intent.putExtra(Intent.EXTRA_EMAIL, mPoliticianModel.getPoliticianEmailId());
+            String[] emails = {mPoliticianModel.getPoliticianEmailId()};
+            intent.putExtra(Intent.EXTRA_EMAIL, emails);
             intent.setType("text/html");
             startActivity(Intent.createChooser(intent, "Send mail"));
         } else {
@@ -106,5 +106,22 @@ public class PoliticianDetailActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_politician_detail, menu);
         return true;
+    }
+
+    private void processIPCString(String ipcString){
+        ipcString = ipcString.replaceAll("[)]", "%");
+        ipcString = ipcString.replaceAll("[(]", "-");
+        String[] ipcCharges = ipcString.split("[%]");
+        LinearLayout criminalList = (LinearLayout) findViewById(R.id.criminal_list);
+        for (String charges  : ipcCharges){
+            LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            TextView tv=new TextView(this);
+            tv.setLayoutParams(lparams);
+            tv.setText("" + charges);
+            criminalList.addView(tv);
+
+        }
+
     }
 }

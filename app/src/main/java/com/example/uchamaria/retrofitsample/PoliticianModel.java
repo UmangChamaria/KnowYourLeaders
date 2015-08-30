@@ -26,11 +26,11 @@ public class PoliticianModel implements Serializable {
     private String mPoliticianLiabilities;
     @SerializedName("area")
     private String mPoliticianArea;
-    @SerializedName("criminalRecord")
-    private String mPoliticianCriminalRecord[];
-    @SerializedName("phoneNumber")
+    @SerializedName("ipc")
+    private String mPoliticianCriminalRecord;
+    @SerializedName("contact")
     private String  mPoliticianNumber;
-    @SerializedName("emailId")
+    @SerializedName("email")
     private String mPoliticianEmailId;
     @SerializedName("address")
     private String mPoliticianAddress;
@@ -115,11 +115,11 @@ public class PoliticianModel implements Serializable {
         this.mPoliticianArea = mPoliticianArea;
     }
 
-    public String[] getPoliticianCriminalRecord() {
+    public String getPoliticianCriminalRecord() {
         return mPoliticianCriminalRecord;
     }
 
-    public void setPoliticianCriminalRecord(String[] mPoliticianCriminalRecord) {
+    public void setPoliticianCriminalRecord(String mPoliticianCriminalRecord) {
         this.mPoliticianCriminalRecord = mPoliticianCriminalRecord;
     }
 
